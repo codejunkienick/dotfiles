@@ -1,0 +1,1 @@
+/home/codejunkienick/.config/fisherman/thefuck/functions/fuck.fish

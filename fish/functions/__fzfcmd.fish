@@ -1,0 +1,1 @@
+/home/codejunkienick/.config/fisherman/fzf/functions/__fzfcmd.fish

@@ -1,0 +1,9 @@
+open_with zathura
+cut
+open_with 
+open_with zathu
+delete
+copy
+mkdir 
+mkdir imdtest
+paste

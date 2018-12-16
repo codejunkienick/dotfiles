@@ -1,0 +1,14 @@
+alias cdwin="cd /media/windows/Users/Никита/"
+alias lsdir="ls -la --color | grep \"^d\" and ls -la --color | grep \"^-\" and ls -la --color | grep \"^l\""
+alias cp="rsync -ah --progress"  
+alias termtitle="~/scripts/termtitle.sh"
+alias connectdj="xfreerdp ~/work/Minecr.rdp /p:MCZ\|mCH#r%kHO* /u:RadioDJ /d:minecr.cloudapp.net /w:1280 /h:1024 +clipboard"
+alias pomodoro="~/scripts/pomodoro.sh"
+alias runwindows="vmrun start /media/windows/Users/Никита/VMs/Windows\ 10\ x64/Windows\ 10\ x64.vmx"
+
+set -x PATH $PATH:~/bin
+set -x TERM xterm
+set -x PS1 '\[\033[0;35m\]\u@ \[\033[0;33m\]\W\[\033[00m\] $'
+set -x ANDROID_HOME /opt/android-sdk/android-sdk-linux
+set -x ANDROID_NDK /opt/android-ndk
+set -x GOPATH "$HOME/gopath/"
