@@ -23,7 +23,6 @@ set -gx TERM xterm-256color
 set -gx NVM_DIR /usr/share/nvm
 set -x GOPATH ~/bin
 set -x PATH $PATH ~/bin
-set -x ANDROID_SDK /opt/android-sdk/
 set -x PATH $PATH ~/.cargo/bin
 set -x PS1 '\[\033[0;35m\]\u@ \[\033[0;33m\]\W\[\033[00m\] $ '
 set -x DISPLAY :0

@@ -732,7 +732,7 @@ awful.key({ modkey }, "b", function ()
     -- awful.key({ altkey,           }, "h",      function () fshomeupd.show(7) end),
     -- awful.key({ altkey,           }, "w",      function () yawn.show(7) end),
 
-   awful.key({ }, "Print", function() awful.spawn_with_shell("import -window root ~/Screenshots/shot-(date +%F)--(date +%T).png") end),
+   awful.key({ }, "Print", function() awful.spawn_with_shell("import -window root ~/shot-(date +%F)--(date +%T).png") end),
    awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
    awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
    awful.key({ }, "XF86MonBrightnessUp", function() awful.util.spawn_with_shell("xbacklight + 10%") end),

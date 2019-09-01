@@ -142,5 +142,9 @@ theme.apw_bg_color = "#333333"
 theme.apw_mute_fg_color = "#CC9393"
 theme.apw_mute_bg_color = "#663333"
 --}}}
+--
+
+theme.notification_icon_size = 64
+theme.notification_opacity = 10
 
 return theme

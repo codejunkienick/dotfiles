@@ -1,3 +1,4 @@
+package aws
 package config
 package foreign-env
 package git-flow

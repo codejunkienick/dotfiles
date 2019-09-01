@@ -15,6 +15,8 @@ Plug 'wokalski/autocomplete-flow'
 Plug 'plasticboy/vim-markdown'
 
 Plug 'Raimondi/delimitMate'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'Quramy/tsuquyomi'
 
 Plug 'trevordmiller/nova-vim'
 
@@ -80,13 +82,13 @@ Plug 'junegunn/fzf.vim'                                              " Fzf vimpl
 
 Plug 'szw/vim-g'
 
-Plug 'tpope/vim-abolish'
-
 Plug 'tpope/vim-fugitive'
 
 Plug 'tpope/vim-git'
 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" Plug 'dart-lang/dart-vim-plugin'
 
 call plug#end()
 
@@ -95,7 +97,7 @@ autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.gra
 let g:prettier#config#parser = 'flow'
 let g:prettier#config#single_quote = 'true'
 let g:prettier#config#bracket_spacing = 'true'
-let g:prettier#config#trailing_comma = 'none'
+let g:prettier#config#trailing_comma = 'es5'
 let g:prettier#config#jsx_bracket_same_line = 'false'
 
 " ----------------------------------------------------------------------------
@@ -122,6 +124,7 @@ set nobackup
 set noswapfile 
 set winheight=10
 set mouse=a
+set nofoldenable    " disable folding
 
 " Disable menu.vim
 if has('gui_running') 
@@ -274,7 +277,6 @@ set statusline+=%*
 " ----------------------------------------------------------------------------
 " Writing
 " ----------------------------------------------------------------------------
-
 autocmd! User GoyoEnter Limelight 
 autocmd! User GoyoLeave Limelight!
 
@@ -371,6 +373,15 @@ xmap <C-k> <Plug>(neosnippet_expand_target)
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
 
+
+
+" ----------------------------------------------------------------------------
+" GitGutter
+" ----------------------------------------------------------------------------
+let g:gitgutter_signs = 1
+let g:gitgutter_enabled = 1
+let g:gitgutter_async = 1 
+
 " ----------------------------------------------------------------------------
 " Ale
 " ----------------------------------------------------------------------------
@@ -410,7 +421,7 @@ set hidden
 
 "Session settings
 let g:session_autosave = "yes"
-let g:session_autoload = "no"
+let g:session_autoload = "yes"
 
 
 " ----------------------------------------------------------------------------
