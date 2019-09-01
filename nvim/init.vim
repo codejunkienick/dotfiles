@@ -100,6 +100,17 @@ let g:prettier#config#bracket_spacing = 'true'
 let g:prettier#config#trailing_comma = 'es5'
 let g:prettier#config#jsx_bracket_same_line = 'false'
 
+" " Prettier for Lua
+" function PrettierLuaCursor()
+"   let save_pos = getpos(".")
+"   %! prettier --stdin --parser=lua
+"   call setpos('.', save_pos)
+" endfunction
+" " define custom command
+" command PrettierLua call PrettierLuaCursor()
+" " format on save
+" autocmd BufwritePre *.lua PrettierLua
+
 " ----------------------------------------------------------------------------
 " General
 " ----------------------------------------------------------------------------
