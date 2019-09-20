@@ -1,6 +1,6 @@
 # Solarized dark color scheme
 [options]
-font = Iosevka Term 10
+font = Iosevka Term 14
 
 [colors]
 foreground = #839496

@@ -11,8 +11,8 @@ theme                               = {}
 theme.dir                         = os.getenv("HOME") .. "/.config/awesome/theme"
 theme.wallpaper                     = theme.dir ..  "/wallpapers/canyon.jpg" 
 
-theme.font                          = "Lucida Grande 6"
-theme.taglist_font                              = "Icons 10"
+  theme.font                          = "Lucida Grande 12"
+theme.taglist_font                              = "Lucida Grande 12"
 theme.fg_normal                                 = "#747474"
 theme.fg_focus                                  = "#DDDCFF"
 theme.bg_normal                                 = "#121212"
@@ -124,7 +124,7 @@ theme.border_marked = theme.bg_urgent
 theme.mouse_finder_color = theme.colors.green
 -- mouse_finder_[timeout|animate_timeout|radius|factor]
 -- }}}
-theme.menu_height                   = "16"
+theme.menu_height                   = "24"
 theme.menu_width                    = "140"
 
 

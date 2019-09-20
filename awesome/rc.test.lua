@@ -18,7 +18,7 @@ local lain = require("lain")
 local battary = require("battery")
 local tyrannical = require("tyrannical")
 local APW = require("apw/widget")
--- local awesompd = require("awesompd/awesompd")
+local awesompd = require("awesompd/awesompd")
 local freedesktop = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 APW.Update()
@@ -81,8 +81,11 @@ local altkey = "Mod4"
 local terminal = "termite" or "terminator" or "xterm"
 local dropdownterm = "termite"
 local editor = os.getenv("EDITOR") or "nvim" or "vi"
+local editor_cmd = terminal .. " -e " .. editor
 
-local quakescratch = {
+local quakescratch = {}
+for s in screen do
+	quakescratch[s] = lain.util.quake({
 		app = dropdownterm,
 		name = "Scratchpad",
 		argname = "--name %s",
@@ -90,28 +93,8 @@ local quakescratch = {
 		width = 0.6,
 		vert = "center",
 		horiz = "center"
-}
-local quakeslack = {
-		app = 'slack',
-    argname = "",
-    useclass = true,
-		name = "Slack",
-		height = 0.55,
-		width = 0.30,
-		vert = "bottom",
-		horiz = "right"
-}
-
-local quaketelegram = {
-		app = 'telegram-desktop',
-    argname = "",
-    useclass = true,
-		name = "TelegramDesktop",
-		height = 0.55,
-		width = 0.30,
-		vert = "bottom",
-		horiz = "right"
-}
+	})
+end
 
 -- user defined
 local browser2 = "google-chrome-beta"
@@ -131,18 +114,9 @@ local layouts =
 		lain.layout.centerwork,
 		awful.layout.suit.fair,
 		awful.layout.suit.tile.bottom,
-		awful.layout.suit.tile.top,
-    awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
+		awful.layout.suit.tile.top
 	}
-awful.layout.layouts = layouts
+-- }}}
 
 -- First, set some settings
 tyrannical.settings.default_layout = awful.layout.suit.tile.left
@@ -154,34 +128,33 @@ tyrannical.tags = { {
 	selected = true,
 	exclusive = false,
 	layout = layouts[3],
+	class = { "termite", "alacritty", "Alacritty", "XTerm" }
 }, {
 	name = "web",
-	screen = { 1, 2 },
+	screen = { 1, 2, 3 },
 	init = true,
 	exclusive = false,
 	mwfact = 0.70,
 	layout = layouts[3],
 	class = {
-    "Slack",
 		"Firefox",
 		"brave",
 		"chromium",
 		"Google-chrome",
-		"Google-chrome-beta",
 		"Tor Browser",
 		"termite:web",
 		"Midori"
 	}
 }, {
 	name = "edit",
-	screen = {1,3},
+	screen = 1,
 	init = true,
 	exclusive = false,
 	layout = layouts[3],
 	class = {}
 }, {
 	name = "dev",
-	screen = {1,3},
+	screen = 1,
 	init = true,
 	exclusive = false,
 	mwfact = 0.25,
@@ -190,6 +163,7 @@ tyrannical.tags = { {
 	class = {
 		"jetbrains-pycharm-ce",
 		"jetbrains-pycharm",
+		"Google-chrome-beta",
 		"jetbrains-webstorm",
 		"MonoDevelop",
 		"Code::Blocks",
@@ -305,23 +279,21 @@ tyrannical.tags = { {
 	--   icon        = utils.tools.invertedIconPath("chat.png")       ,
 	layout = layouts[3],
 	class = { "discord", "Cutegram", "telegram", "Pidgin", "Kopete", "Skype" }
-},
--- {
--- 	name = "conf",
--- 	init = false,
--- 	position = 10,
--- 	exclusive = false,
--- 	--   icon        = utils.tools.invertedIconPath("tools.png")      ,
--- 	layout = layouts[4],
--- 	class = {
--- 		"Systemsettings",
--- 		"Pavucontrol",
--- 		"Android SDK Manager",
--- 		"gconf-editor",
--- 		"Arandr"
--- 	}
--- }, 
-{
+}, {
+	name = "conf",
+	init = false,
+	position = 10,
+	exclusive = false,
+	--   icon        = utils.tools.invertedIconPath("tools.png")      ,
+	layout = layouts[4],
+	class = {
+		"Systemsettings",
+		"Pavucontrol",
+		"Android SDK Manager",
+		"gconf-editor",
+		"Arandr"
+	}
+}, {
 	name = "Gimp",
 	init = false,
 	position = 10,
@@ -336,8 +308,6 @@ tyrannical.tags = { {
 } }
 tyrannical.properties.intrusive =
 	{
-    "TelegramDesktop",
-    "Slack",
 		"termite",
 		"Gpick",
 		"ksnapshot",
@@ -363,9 +333,6 @@ tyrannical.properties.intrusive =
 	}
 tyrannical.properties.floating =
 	{
-    "slack",
-    "TelegramDesktop",
-    "Pavucontrol",
 		"Gpick",
 		"MPlayer",
 		"pinentry",
@@ -374,7 +341,6 @@ tyrannical.properties.floating =
 		"gtksu",
 		"Go-for-it",
 		"xine",
-		"blueman-manager",
 		"feh",
 		"kmix",
 		"kcalc",
@@ -451,6 +417,63 @@ local gray = "#94928F"
 -- Textclock
 local mytextclock = wibox.widget.textclock(" %H:%M ")
 
+-- lain.widgets.calendar.attach(mytextclock, {
+--     notification_preset = {
+--         font = "Tamsyn 10.5",
+--         fg   = white,
+--         bg   = beautiful.bg_normal
+-- }})
+
+-- Calendar
+-- lain.widgets.calendar:attach(mytextclock)
+
+-- Mail IMAP check
+-- mailwidget = lain.widgets.imap({
+--     timeout  = 180,
+--     server   = "server",
+--     mail     = "mail",
+--     password = "keyring get mail",
+--     settings = function()
+--         mail  = ""
+--         count = ""
+--
+--         if mailcount > 0 then
+--             mail = "Mail "
+--             count = mailcount .. " "
+--         end
+--
+--         widget:set_markup(markup(gray, mail) .. count)
+--     end
+-- })
+--
+mpdicon = wibox.widget.imagebox()
+mpdwidget = lain.widget.mpd({ settings = function()
+	mpd_notification_preset =
+		{
+			text = string.format(
+				"%s [%s] - %s\n%s",
+				mpd_now.artist,
+				mpd_now.album,
+				mpd_now.date,
+				mpd_now.title
+			)
+		}
+
+	if mpd_now.state == "play" then
+		artist = mpd_now.artist .. " > "
+		title = mpd_now.title .. " "
+		mpdicon:set_image(beautiful.widget_note_on)
+	elseif mpd_now.state == "pause" then
+		artist = "mpd "
+		title = "paused "
+	else
+		artist = ""
+		title = ""
+		mpdicon:set_image(nil)
+	end
+	widget:set_markup(markup("#e54c62", artist) .. markup("#b2b2b2", title))
+end })
+
 -- CPU
 cpuwidget = lain.widget.sysload({ settings = function()
 	widget:set_markup(markup(gray, " Cpu ") .. load_1 .. " ")
@@ -482,9 +505,82 @@ batwidget = lain.widget.bat({
 	end
 })
 
+musicwidget = awesompd:create() -- Create awesompd widget
+musicwidget.font = "Lucida Grande" -- Set widget font
+musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
+musicwidget.output_size = 30 -- Set the size of widget in symbols
+musicwidget.update_interval = 10 -- Set the update interval in seconds
+-- Set the folder where icons are located (change username to your login name)
+musicwidget.path_to_icons =
+	"/home/codejunkienick/.config/awesome/awesompd/icons"
+-- Set the default music format for Jamendo streams. You can change
+-- this option on the fly in awesompd itself.
+-- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
+musicwidget.jamendo_format = awesompd.FORMAT_MP3
+-- If true, song notifications for Jamendo tracks and local tracks will also contain
+-- album cover image.
+musicwidget.show_album_cover = true
+-- Specify how big in pixels should an album cover be. Maximum value
+-- is 100.
+musicwidget.album_cover_size = 50
+-- This option is necessary if you want the album covers to be shown
+-- for your local tracks.
+musicwidget.mpd_config = "/home/codejunkienick/.config/mpd/mpd.conf"
+-- Specify the browser you use so awesompd can open links from
+-- Jamendo in it.
+musicwidget.browser = "chromium"
+-- Specify decorators on the left and the right side of the
+-- widget. Or just leave empty strings if you decorate the widget
+-- from outside.
+musicwidget.ldecorator = " "
+musicwidget.rdecorator = " "
+-- Set all the servers to work with (here can be any servers you use)
+musicwidget.servers = { {
+	server = "localhost",
+	port = 6600
+} }
+-- Set the buttons of the widget
+musicwidget:register_buttons(
+	{
+		{ "", awesompd.MOUSE_LEFT, musicwidget:command_playpause() },
+		{
+			"Control",
+			awesompd.MOUSE_SCROLL_UP,
+			musicwidget:command_prev_track()
+		},
+		{
+			"Control",
+			awesompd.MOUSE_SCROLL_DOWN,
+			musicwidget:command_next_track()
+		},
+		{ "", awesompd.MOUSE_SCROLL_UP, musicwidget:command_volume_up() },
+		{ "", awesompd.MOUSE_SCROLL_DOWN, musicwidget:command_volume_down() },
+		{ "", awesompd.MOUSE_RIGHT, musicwidget:command_show_menu() },
+		{
+			"Control",
+			"XF86AudioLowerVolume",
+			musicwidget:command_volume_down()
+		},
+		{ "Control", "XF86AudioRaiseVolume", musicwidget:command_volume_up() },
+		{ modkey, "Pause", musicwidget:command_playpause() }
+	}
+)
+musicwidget:run() -- After all configuration is done, run the widget
+local netwidget = lain.widget.net({ settings = function()
+	if net_now.state == "up" then
+		net_state = "On"
+	else
+		net_state = "Off"
+	end
+	widget:set_markup(markup(gray, " Net ") .. net_state .. " ")
+end })
+
+-- volumewidget = blingbling.volume({width = 40, bar =true, show_text = true, label ="$percent%", pulseaudio = true})
+-- volumewidget:update_master()
+-- volumewidget:set_master_control()
 
 -- Separators
-local first = wibox.widget.textbox(markup.font("Tamsyn 4", " "))
+local first = wibox.widget.textbox(markup.font("Tamsyn 7", " "))
 local spr = wibox.widget.textbox(" ")
 
 -- Create a wibox for each screen and add it
@@ -549,13 +645,32 @@ mytasklist.buttons = awful.util.table.join(
 
 -- Make sure you remove the default Mod4+Space and Mod4+Shift+Space
 -- keybindings before adding this.
-
+awful.keygrabber{
+	start_callback = function()
+    s = awful.screen.focused()
+		s.mylayoutpopup.visible = true
+	end,
+	stop_callback = function()
+    s = awful.screen.focused()
+		s.mylayoutpopup.visible = false
+	end,
+	export_keybindings = true,
+	release_event = "release",
+	stop_key = { "Escape", "Super_L", "Super_R" },
+	keybindings = { { { modkey }, " ", function()
+    s = awful.screen.focused()
+		awful.layout.set(
+			gears.table.iterate_value(s.mylayoutlist.layouts, s.mylayoutlist.current_layout, 1)
+		)
+	end }, { { modkey, "Shift" }, " ", function()
+    s = awful.screen.focused()
+		awful.layout.set(
+			gears.table.iterate_value(s.mylayoutlist.layouts, s.mylayoutlist.current_layout, -1)
+		)
+	end } }
+}
 
 awful.screen.connect_for_each_screen(function(s)
-  s.quaketerm = lain.util.quake(quakescratch)
-  s.quakeslack = lain.util.quake(quakeslack)
-  s.quaketelegram = lain.util.quake(quaketelegram)
-
 	set_wallpaper(s)
 
 	s.mypromptbox = awful.widget.prompt()
@@ -637,7 +752,7 @@ s.mylayoutpopup = awful.popup{
 	s.mywibox = awful.wibar({
 		position = "top",
 		screen = s,
-		height = 18
+		height = 24
 	})
 
 	s.mywibox:setup{
@@ -656,8 +771,8 @@ s.mylayoutpopup = awful.popup{
 			layout = wibox.layout.fixed.horizontal,
 			wibox.widget.systray(),
 			spr,
-			-- mpdwidget,
-			-- musicwidget.widget,
+			mpdwidget,
+			musicwidget.widget,
 			cpuwidget,
 			memwidget,
 			batwidget,
@@ -878,9 +993,18 @@ globalkeys = awful.util.table.join(
 	awful.key({ modkey, "Shift" }, "o", awesome.quit),
 
 	-- Dropdown terminal
-  awful.key({ modkey, }, "z", function () awful.screen.focused().quaketerm:toggle() end),
-  awful.key({ modkey, }, "s", function () awful.screen.focused().quakeslack:toggle() end),
-  awful.key({ modkey, }, "t", function () awful.screen.focused().quaketelegram:toggle() end),
+	awful.key(
+		{ modkey },
+		"z",
+		function()
+			quakescratch[mouse.screen]:toggle()
+		end,
+		{
+			description = "Scratchpad",
+			group = "applications"
+		}
+	),
+	--awful.key({ modkey,	          }, "z",      function () drop(dropdownterm, "center", "center", 0.6, 0.55) end),
 
 	-- Widgets popups
 	-- awful.key({ altkey,           }, "c",      function () lain.widgets.calendar:show(7) end),
@@ -888,7 +1012,9 @@ globalkeys = awful.util.table.join(
 	-- awful.key({ altkey,           }, "w",      function () yawn.show(7) end),
 
 	awful.key({}, "Print", function()
-		awful.util.spawn_with_shell("maim -s | xclip -selection clipboard -t image/png")
+		awful.spawn_with_shell(
+			"import -window root ~/shot-(date +%F)--(date +%T).png"
+		)
 	end),
 	awful.key({}, "XF86AudioRaiseVolume", APW.Up),
 	awful.key({}, "XF86AudioLowerVolume", APW.Down),
@@ -913,22 +1039,22 @@ globalkeys = awful.util.table.join(
 	awful.key({}, "XF86AudioMute", APW.ToggleMute),
 
 	-- MPD control
-	-- awful.key({ altkey, "Control" }, "Up", function()
-	-- 	awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
-	-- 	mpdwidget.update()
-	-- end),
-	-- awful.key({ altkey, "Control" }, "Down", function()
-	-- 	awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
-	-- 	mpdwidget.update()
-	-- end),
-	-- awful.key({ altkey, "Control" }, "Left", function()
-	-- 	awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
-	-- 	mpdwidget.update()
-	-- end),
-	-- awful.key({ altkey, "Control" }, "Right", function()
-	-- 	awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
-	-- 	mpdwidget.update()
-	-- end),
+	awful.key({ altkey, "Control" }, "Up", function()
+		awful.util.spawn_with_shell("mpc toggle || ncmpc toggle || pms toggle")
+		mpdwidget.update()
+	end),
+	awful.key({ altkey, "Control" }, "Down", function()
+		awful.util.spawn_with_shell("mpc stop || ncmpc stop || pms stop")
+		mpdwidget.update()
+	end),
+	awful.key({ altkey, "Control" }, "Left", function()
+		awful.util.spawn_with_shell("mpc prev || ncmpc prev || pms prev")
+		mpdwidget.update()
+	end),
+	awful.key({ altkey, "Control" }, "Right", function()
+		awful.util.spawn_with_shell("mpc next || ncmpc next || pms next")
+		mpdwidget.update()
+	end),
 
 	-- Copy to clipboard
 	awful.key({ modkey }, "c", function()
@@ -1171,7 +1297,7 @@ clientbuttons = awful.util.table.join(
 )
 
 -- Set keys
--- musicwidget:append_global_keys()
+musicwidget:append_global_keys()
 root.keys(globalkeys)
 -- }}}
 
@@ -1257,10 +1383,7 @@ awful.rules.rules = { -- All clients will match this rule.
 	callback = function(c)
 		awful.client.property.set(c, "overwrite_class", "termite:vim")
 	end
-},
- { rule_any = { class = { "slack", "TelegramDesktop"} },
-    properties = { opacity = 0.90 } },
-}
+} }
 -- }}}
 
 -- {{{ Signals

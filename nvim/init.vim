@@ -4,21 +4,17 @@
  
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'w0rp/ale'
 
-" Plug 'heavenshell/vim-jsdoc'
-"
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'itchyny/lightline.vim'
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-Plug 'wokalski/autocomplete-flow'
 Plug 'plasticboy/vim-markdown'
 
 Plug 'Raimondi/delimitMate'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'Quramy/tsuquyomi'
 
 Plug 'trevordmiller/nova-vim'
+
+Plug 'icymind/NeoSolarized'
 
 Plug 'Shougo/neosnippet'
 
@@ -26,15 +22,7 @@ Plug 'Shougo/neosnippet-snippets'
 
 Plug 'majutsushi/tagbar'
 
-Plug 'honza/vim-snippets'
-
 Plug 'romgrk/vim-easytags' 
-
-"Plug 'carlitux/deoplete-ternjs'
-
-Plug 'steelsojka/deoplete-flow'
-
-" Plug 'flowtype/vim-flow'
 
 Plug 'xolox/vim-misc'
 
@@ -44,15 +32,9 @@ Plug 'mxw/vim-jsx'
 
 Plug 'pangloss/vim-javascript'
 
-Plug 'reedes/vim-thematic'
-
 Plug 'scrooloose/nerdtree'
 
-" Plug 'ternjs/tern_for_vim', {'do': 'npm install'}
-
 Plug 'tomtom/tcomment_vim'
-
-Plug 'vim-airline/vim-airline'
 
 Plug 'easymotion/vim-easymotion'
 
@@ -72,8 +54,6 @@ Plug 'junegunn/limelight.vim'
 
 Plug 'junegunn/goyo.vim'
 
-" Plug 'rhysd/vim-grammarous'
-
 Plug 'moll/vim-bbye'
 
 Plug 'tpope/vim-abolish'                                             "Flexible search
@@ -88,12 +68,26 @@ Plug 'tpope/vim-git'
 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
+Plug 'jparise/vim-graphql'
+
+Plug 'tbastos/vim-lua'
+
+Plug 'leafgarland/typescript-vim'
+
+Plug 'mileszs/ack.vim'
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+
 " Plug 'dart-lang/dart-vim-plugin'
 
 call plug#end()
 
 let g:prettier#autoformat = 0
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.vue PrettierAsync
+
 let g:prettier#config#parser = 'flow'
 let g:prettier#config#single_quote = 'true'
 let g:prettier#config#bracket_spacing = 'true'
@@ -114,8 +108,11 @@ let g:prettier#config#jsx_bracket_same_line = 'false'
 " ----------------------------------------------------------------------------
 " General
 " ----------------------------------------------------------------------------
+set exrc
+set secure
 set shell=fish
 set t_Co=256
+set termguicolors
 set nocompatible 
 filetype on
 filetype plugin on
@@ -132,11 +129,16 @@ set gdefault
 set incsearch
 set winwidth=84 
 set nobackup 
-set noswapfile 
+set nowritebackup
+" Better display for messages
+set cmdheight=2
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
+" set noswapfile 
 set winheight=10
 set mouse=a
 set nofoldenable    " disable folding
-
 " Disable menu.vim
 if has('gui_running') 
 	set guioptions=Mc 
@@ -265,7 +267,7 @@ set ts=2 sts=2 sw=2 expandtab
 " Whitespace
 " ----------------------------------------------------------------------------
 set nowrap
-set nojoinspaces                      " J command doesn't add extra space
+set nojoinspaces                      " J command doesn't add extra space 
 
 " ----------------------------------------------------------------------------
 " Easymotion
@@ -282,9 +284,8 @@ map <Leader>k <Plug>(easymotion-k)
 " ----------------------------------------------------------------------------
 " Status line
 " ----------------------------------------------------------------------------
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%*
 " ----------------------------------------------------------------------------
 " Writing
 " ----------------------------------------------------------------------------
@@ -305,15 +306,18 @@ set guioptions=aAc
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:• 
 set directory^=$HOME/.config/nvim/tmp//
 set backupdir=$HOME/.config/nvim/backup// 
+set undodir=$HOME/.config/nvim/undo//
 set showmatch
 set smartcase
 "set term=xterm-256color
-colorscheme nova 
 let g:local_vimrc = {'names':['.vimrc'],'hash_fun':'LVRHashOfFile'}
-let g:vim_g_open_command = "chromium"
+let g:vim_g_open_command = "google-chrome-beta"
 
 let g:easytags_async=1
 let g:easytags_auto_highlight=0
+
+" Allow saving in root
+command! -nargs=0 Sw w !sudo tee % > /dev/null
 
 
 " ----------------------------------------------------------------------------
@@ -357,8 +361,8 @@ if executable(local_flow)
 endif
 
 
-highlight Normal ctermfg=grey ctermbg=black
-highlight nonText ctermbg=NONE
+" highlight Normal ctermfg=grey ctermbg=black
+" highlight nonText ctermbg=NONE
 
 let g:vitality_tmux_can_focus = 1
 
@@ -372,7 +376,6 @@ autocmd FileType javascript set formatprg=prettier\ --single-quote\ --parser\ fl
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' } 
-let g:airline#extensions#tabline#enabled = 1
 
 " Plugin key-mappings. Note: It must be "imap" and "smap".  It uses <Plug>
 " mappings.
@@ -383,130 +386,15 @@ xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
-
-
-
-" ----------------------------------------------------------------------------
-" GitGutter
-" ----------------------------------------------------------------------------
-let g:gitgutter_signs = 1
-let g:gitgutter_enabled = 1
-let g:gitgutter_async = 1 
-
-" ----------------------------------------------------------------------------
-" Ale
-" ----------------------------------------------------------------------------
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_text_changed = 1
-
-let g:ale_echo_cursor = 1
-let g:ale_echo_msg_error_str = 'Error'
-let g:ale_echo_msg_format = '%linter% : %s'
-let g:ale_echo_msg_warning_str = 'Warning'
-let g:ale_enabled = 1
-let g:ale_keep_list_window_open = 0
-let g:ale_lint_delay = 700
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = 'always'
-let g:ale_linter_aliases = {}
-let g:ale_linters = {'go': ['gometalinter', 'go build'], 'html': [], 'javascript': ['eslint', 'flow'], 'python': ['flake8']}
-let g:ale_open_list = 0
-let g:ale_set_highlights = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:ale_set_signs = 1
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '>>'
-let g:ale_sign_offset = 1000000
-let g:ale_sign_warning = '>>'
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '✓ OK']
-let g:ale_warn_about_trailing_whitespace = 1
-
 set hidden
 
-
-"let g:AutoClosePumvisible = {"ENTER": "", "ESC": ""}
-
-"Showmatch significantly slows down omnicomplete when the first match contains
-"parentheses. set noshowmatch
 
 "Session settings
 let g:session_autosave = "yes"
 let g:session_autoload = "yes"
 
-
-" ----------------------------------------------------------------------------
-" NeoComplete
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 150
-let g:deoplete#auto_refresh_delay =1000
-let g:deoplete#enable_camel_case = 1
-"let g:deoplete#auto_complete_start_length = 3
-
-let g:deoplete#keyword_patterns = {} 
-let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
-
-"let g:deoplete#sources#go = 'vim-go'
-
-let g:tern_request_timeout = 1
-let g:tern_show_signature_in_pum = '0'  " Thisdo disable full signature type on autocomplete
-let g:tern#filetypes = [
-			\ 'jsx',
-			\ 'javascript.jsx',
-			\ 'vue', 
-			\ 'js'
-			\ ]
-
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
-
-let g:deoplete#sources#jedi#statement_length = 0 
-let g:deoplete#sources#jedi#show_docstring = 1 
-let g:deoplete#sources#jedi#short_types = 1
-"let g:deoplete#sources#jedi#worker_threads = 2
-
-let g:deoplete#sources#flow#flow_bin = 'flow' 
-
-"let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {}) 
-"let g:deoplete#omni#functions.php = 'phpcomplete_extended#CompletePHP' 
-"let g:deoplete#omni#functions.css = 'csscomplete#CompleteCSS'
-"let g:deoplete#omni#functions.html = 'htmlcomplete#CompleteTags'
-
-"let g:deoplete#omni#input_patterns = get(g:, 'deoplete#omni#input_patterns',{})
-"let g:deoplete#omni#input_patterns.python = '' 
-"let g:deoplete#omni#input_patterns.javascript = '[^. \t]\.\%\(\h\w*\)\?'
-"let g:deoplete#omni#input_patterns.html = '.+'
-"let g:deoplete#omni#input_patterns.php = 
-			\ '\w+|[^. \t]->\w*|\w+::\w*'
-
-"let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {}) 
-"let "g:deoplete#omni_patterns.php = \ '\h\w*\|[^.
-"\t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-"let g:deoplete#member#prefix_patterns = get(g:,'deoplete#member#prefix_patterns', {})
-"let g:deoplete#member#prefix_patterns.javascript = ['\.']
-
-let g:deoplete#tag#cache_limit_size = 5000000
-
-" call deoplete#custom#set('buffer', 'mark', '') call deoplete#custom#set('_',
-" 'matchers', ['matcher_head']) call deoplete#custom#set('_', 'matchers',
-" ['matcher_full_fuzzy']) call deoplete#custom#set('_', 'disabled_syntaxes',
-" ['Comment', 'String']) call deoplete#custom#set('buffer', 'mark', '*')
-"
-" Use auto delimiter call deoplete#custom#set('_', 'converters', \
-" ['converter_auto_paren', \  'converter_auto_delimiter', 'remove_overlap'])
-
-call deoplete#custom#source('_', 'converters', [
-			\ 'converter_remove_paren', 
-			\ 'converter_remove_overlap', 
-			\ 'converter_truncate_abbr', 
-			\ 'converter_truncate_menu',
-			\ 'converter_auto_delimiter', 
-			\ ])
-
 " Movement within 'ins-completion-menu'
-imap <expr><C-j>   pumvisible() ? "\<C-n>" : "\<C-j>"
+imap <expr><C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 imap <expr><C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Scroll pages in menu
@@ -515,61 +403,161 @@ inoremap <expr><C-b> pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<Left>"
 imap <expr><C-d> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>" 
 imap <expr><C-u> pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
-" Undo completion
-inoremap <expr><C-g> deoplete#undo_completion()
 
-" Redraw candidates
-inoremap <expr><C-l> deoplete#refresh()
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>" 
-noremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" <CR>: If popup menu visible, expand snippet or close popup with selection,
-"       Otherwise, check if within empty pair and use delimitMate.
-imap <silent><expr><CR> pumvisible() ?
-	\ (neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : deoplete#close_popup())
-		\ : (delimitMate#WithinEmptyPair() ? "\<Plug>delimitMateCR" : "\<CR>")
-
-" <Tab> completion:
-" 1. If popup menu is visible, select and insert next item
-" 2. Otherwise, if within a snippet, jump to next input
-" 3. Otherwise, if preceding chars are whitespace, insert tab char
-" 4. Otherwise, start manual autocomplete
-imap <silent><expr><Tab> pumvisible() ? "\<C-n>"
-	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
-	\ : (<SID>is_whitespace() ? "\<Tab>"
-	\ : deoplete#manual_complete()))
-
-smap <silent><expr><Tab> pumvisible() ? "\<C-n>"
-	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
-	\ : (<SID>is_whitespace() ? "\<Tab>"
-	\ : deoplete#manual_complete()))
-
-inoremap <expr><S-Tab>  pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:is_whitespace() "{{{
-	let col = col('.') - 1
-	return ! col || getline('.')[col - 1] =~? '\s'
-endfunction "}}}
-" }}}
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
 
-"Theme conf
-let g:thematic#themes = { 
-			\  'laptop' : { 'colorscheme': 'solarized', 
-			\ 'background' : 'light',
-			\                  'transparancy': 0,
-			\ 'typeface': 'Operator Mono',
-			\                  'font-size': 12,
-			\ },
-			\  'home' : {'colorscheme': 'nova', 
-			\                  'background' : 'dark', 
-			\ 'transparancy': 0, 
-			\                  'typeface': 'Operator Mono', 
-			\'font-size': 10,
-			\                },
-			\}
-let g:thematic#theme_name = 'OceanicNext'
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-nnoremap <Leader>D :Thematic pencil_dark<CR>
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Create mappings for function text object, requires document symbols feature of
+" languageserver.
+
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+let g:nova_transparent = 1
+
+colorscheme NeoSolarized
+hi Normal guibg=NONE ctermbg=NONE 
+
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  " return blame
+  return winwidth(0) > 120 ? blame : ''
+endfunction
+
+
+
+" lightline
+let g:lightline = {
+   \ 'colorscheme': 'solarized',
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste' ],
+  \     [ 'gitbranch' ],
+  \     [ 'diagnostic', 'readonly', 'cocstatus', 'filename', 'modified' ]
+  \   ],
+  \   'right':[
+  \     [ 'filetype', 'lineinfo', 'percent' ],
+  \     [ 'blame' ]
+  \   ],
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'fugitive#head',
+  \   'blame': 'LightlineGitBlame',
+  \   'cocstatus': 'coc#status',
+  \   'currentfunction': 'CocCurrentFunction'
+  \ }
+\ }
+set noshowmode
+

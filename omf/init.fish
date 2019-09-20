@@ -22,6 +22,7 @@ bind \cp 'vim (fzf)'
 set -gx TERM xterm-256color
 set -gx NVM_DIR /usr/share/nvm
 set -x GOPATH ~/bin
+set -gx BROWSER /usr/bin/google-chrome-beta
 set -x PATH $PATH ~/bin
 set -x PATH $PATH ~/.cargo/bin
 set -x PS1 '\[\033[0;35m\]\u@ \[\033[0;33m\]\W\[\033[00m\] $ '
