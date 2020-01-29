@@ -1,0 +1,10 @@
+# Setup fish
+sudo pacman -S fish fasd fzf hub nvim yarn npm nodejs qemu libvirt virt-manager 
+curl -L https://get.oh-my.fish | fish
+curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+
+# Aur FISH deps
+pamac build direnv
+pamac build the_platinum_searcher
+
+

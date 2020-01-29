@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/getopts/getopts.fish
+/home/nick/.config/fisherman/getopts/getopts.fish

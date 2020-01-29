@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/fzf/functions/__fzf_uninstall.fish
+/home/nick/.config/fisherman/fzf/functions/__fzf_uninstall.fish

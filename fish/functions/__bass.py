@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/bass/functions/__bass.py
+/home/nick/.config/fisherman/bass/functions/__bass.py

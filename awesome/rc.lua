@@ -167,7 +167,6 @@ tyrannical.tags = { {
 		"brave",
 		"chromium",
 		"Google-chrome",
-		"Google-chrome-beta",
 		"Tor Browser",
 		"termite:web",
 		"Midori"
@@ -202,7 +201,7 @@ tyrannical.tags = { {
 		"jetbrains-idea-c",
 		"jetbrains-idea",
 		"Code",
-		"jetbrains-rider"
+		"jetbrains-rider",
 	}
 }, {
 	name = "img",
@@ -336,6 +335,7 @@ tyrannical.tags = { {
 } }
 tyrannical.properties.intrusive =
 	{
+    "Google-chrome-beta",
     "TelegramDesktop",
     "Slack",
 		"termite",

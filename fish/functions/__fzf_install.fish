@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/fzf/functions/__fzf_install.fish
+/home/nick/.config/fisherman/fzf/functions/__fzf_install.fish

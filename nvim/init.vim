@@ -4,106 +4,79 @@
  
 call plug#begin('~/.config/nvim/plugged')
 
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'itchyny/lightline.vim'
-
-Plug 'plasticboy/vim-markdown'
-
-Plug 'Raimondi/delimitMate'
-
-Plug 'trevordmiller/nova-vim'
-
-Plug 'icymind/NeoSolarized'
-
-Plug 'Shougo/neosnippet'
-
-Plug 'Shougo/neosnippet-snippets'
-
-Plug 'majutsushi/tagbar'
-
-Plug 'romgrk/vim-easytags' 
-
-Plug 'xolox/vim-misc'
-
-Plug 'xolox/vim-session'
-
-Plug 'mxw/vim-jsx'
-
-Plug 'pangloss/vim-javascript'
-
-Plug 'scrooloose/nerdtree'
-
-Plug 'tomtom/tcomment_vim'
-
-Plug 'easymotion/vim-easymotion'
-
+" Default VIM settings
 Plug 'tpope/vim-sensible'
 
-Plug 'FelikZ/ctrlp-py-matcher'
+" Super Power
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Syntax Plugins
+Plug 'ericfreese/typescript-vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'jparise/vim-graphql'
+Plug 'tbastos/vim-lua'
+Plug 'pangloss/vim-javascript'
+
+" Powerline plugin
+Plug 'itchyny/lightline.vim'
+
+" automatic closing of quotes, parenthesis, brackets, etc.
+Plug 'Raimondi/delimitMate'
+
+" Navigation
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'romgrk/vim-easytags' 
+Plug 'mileszs/ack.vim'
+Plug 'junegunn/fzf.vim'
+Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'ctrlpvim/ctrlp.vim'
 
-Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-
+" Text utils
+Plug 'easymotion/vim-easymotion'
+Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'     " Better search/replace case sensitive preserve
 
+" Git
 Plug 'airblade/vim-gitgutter'
-
-Plug 'junegunn/limelight.vim'
-
-Plug 'junegunn/goyo.vim'
-
+Plug 'tpope/vim-fugitive'
 Plug 'moll/vim-bbye'
 
-Plug 'tpope/vim-abolish'                                             "Flexible search
 
-Plug 'junegunn/fzf.vim'                                              " Fzf vimplugin
+" Themes
+Plug 'trevordmiller/nova-vim'
+Plug 'icymind/NeoSolarized'
 
-Plug 'szw/vim-g'
+" Writing Focus
+Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
 
-Plug 'tpope/vim-fugitive'
 
-Plug 'tpope/vim-git'
-
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
-Plug 'jparise/vim-graphql'
-
-Plug 'tbastos/vim-lua'
-
-Plug 'leafgarland/typescript-vim'
-
-Plug 'mileszs/ack.vim'
+" Plug 'tpope/vim-git'
+" Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+" Plug 'Shougo/neosnippet'
+" Plug 'Shougo/neosnippet-snippets'
+" Plug 'xolox/vim-misc'
+" Plug 'xolox/vim-session'
 
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
+" autocmd BufWritePre *.js CocCommand prettier.formatFile
+" autocmd BufWritePre *.tsx CocCommand prettier.formatFile
+" autocmd BufWritePre *.ts CocCommand prettier.formatFile
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-" Plug 'dart-lang/dart-vim-plugin'
+" augroup SyntaxSettings
+"     autocmd!
+"     autocmd BufNewFile,BufRead *.tsx set filetype=typescript
+" augroup END
 
 call plug#end()
 
-let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.vue PrettierAsync
-
-let g:prettier#config#parser = 'flow'
-let g:prettier#config#single_quote = 'true'
-let g:prettier#config#bracket_spacing = 'true'
-let g:prettier#config#trailing_comma = 'es5'
-let g:prettier#config#jsx_bracket_same_line = 'false'
-
-" " Prettier for Lua
-" function PrettierLuaCursor()
-"   let save_pos = getpos(".")
-"   %! prettier --stdin --parser=lua
-"   call setpos('.', save_pos)
-" endfunction
-" " define custom command
-" command PrettierLua call PrettierLuaCursor()
-" " format on save
-" autocmd BufwritePre *.lua PrettierLua
 
 " ----------------------------------------------------------------------------
 " General
@@ -233,6 +206,7 @@ nnoremap <A-F0> 10gt
 
 nnoremap <F8> :TagbarToggle<CR>
 nnoremap <F12> :NERDTreeToggle<CR>
+nnoremap <F10> :NERDTreeFind<CR>
 
 " ----------------------------------------------------------------------------
 " Make the 81st column stand out
@@ -335,7 +309,7 @@ let g:fzf_layout = { 'down': '~20%' }
 
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,json,php,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "*.{js,php,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
   \ -g "!{.git,node_modules,vendor}/*" '
 
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
@@ -347,9 +321,11 @@ set rtp+=/usr/bin/fzf "Fuzzy search
 " ----------------------------------------------------------------------------
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:jsx_ext_required = 0
+let g:vim_jsx_pretty_highlight_close_tag = 1
 " let g:javascript_plugin_flow = 1
 let g:flow#enable = 0
 let g:flow#omnifunc = 0
+let g:coc_node_args = ['--max-old-space-size=4096']
 
 "Use locally installed flow
 let local_flow = finddir('node_modules', '.;') . '/.bin/flow'
@@ -370,8 +346,6 @@ let g:vitality_tmux_can_focus = 1
 hi IndentGuidesOdd  ctermbg=black
 hi IndentGuidesEven ctermbg=darkgrey
 
-" autocmd FileType javascript setlocal omnifunc=tern#Complete 
-autocmd FileType javascript set formatprg=prettier\ --single-quote\ --parser\ flow\ --stdin
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
@@ -379,13 +353,13 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " Plugin key-mappings. Note: It must be "imap" and "smap".  It uses <Plug>
 " mappings.
-imap <C-k><Plug>(neosnippet_expand_or_jump) 
-smap <C-k><Plug>(neosnippet_expand_or_jump) 
-xmap <C-k> <Plug>(neosnippet_expand_target)
-
+" imap <C-k><Plug>(neosnippet_expand_or_jump) 
+" smap <C-k><Plug>(neosnippet_expand_or_jump) 
+" xmap <C-k> <Plug>(neosnippet_expand_target)
+"
 
 " Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
+" let g:neosnippet#enable_snipmate_compatibility = 1
 set hidden
 
 
@@ -461,7 +435,7 @@ nmap <leader>f  <Plug>(coc-format-selected)
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  autocmd FileType typescript,json,javascript setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
@@ -520,6 +494,14 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+
+nmap <expr> <silent> <C-c> <SID>select_current_word()
+function! s:select_current_word()
+  if !get(g:, 'coc_cursors_activated', 0)
+    return "\<Plug>(coc-cursors-word)"
+  endif
+  return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
+endfunc
 
 let g:nova_transparent = 1
 

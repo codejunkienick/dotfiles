@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/bd/functions/bd.fish
+/home/nick/.config/fisherman/bd/functions/bd.fish

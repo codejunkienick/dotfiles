@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/thefuck/functions/__tf_updt.fish
+/home/nick/.config/fisherman/thefuck/functions/__tf_updt.fish

@@ -1,1 +1,22 @@
-{}
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "javascriptreact",
+    "css",
+    "markdown",
+    "md"
+  ],
+  "eslint.filetypes": [
+    "javascript",
+    "json",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact"
+  ],
+  "eslint.autoFix": false,
+  "eslint.autoFixOnSave": false,
+  "prettier.eslintIntegration": true
+}

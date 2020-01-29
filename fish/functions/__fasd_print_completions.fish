@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/fasd/functions/__fasd_print_completions.fish
+/home/nick/.config/fisherman/fasd/functions/__fasd_print_completions.fish

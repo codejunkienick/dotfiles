@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/fasd/functions/a.fish
+/home/nick/.config/fisherman/fasd/functions/a.fish

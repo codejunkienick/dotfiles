@@ -1,8 +1,11 @@
 package aws
 package config
+package fasd
 package foreign-env
 package git-flow
+package https://github.com/jethrokuan/fzf
 package nvm
+package z
 theme bobthefish
 theme default
 theme yimmy

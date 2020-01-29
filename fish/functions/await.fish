@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/await/functions/await.fish
+/home/nick/.config/fisherman/await/functions/await.fish

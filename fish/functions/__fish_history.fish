@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/fzf/functions/__fish_history.fish
+/home/nick/.config/fisherman/fzf/functions/__fish_history.fish

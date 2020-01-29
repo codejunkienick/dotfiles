@@ -1,0 +1,2 @@
+# Boot Params
+rw intel_iommu=on igfx_off kvm_intel nested=1 kvm.ignore_msrs=1 quiet modprobe.blacklist=nouveau

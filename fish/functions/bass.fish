@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/bass/functions/bass.fish
+/home/nick/.config/fisherman/bass/functions/bass.fish

@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/last_job_id/last_job_id.fish
+/home/nick/.config/fisherman/last_job_id/last_job_id.fish

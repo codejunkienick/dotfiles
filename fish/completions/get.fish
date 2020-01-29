@@ -1,1 +1,1 @@
-/home/codejunkienick/.config/fisherman/get/completions/get.fish
+/home/nick/.config/fisherman/get/completions/get.fish

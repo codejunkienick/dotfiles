@@ -512,7 +512,7 @@ musicwidget.output_size = 30 -- Set the size of widget in symbols
 musicwidget.update_interval = 10 -- Set the update interval in seconds
 -- Set the folder where icons are located (change username to your login name)
 musicwidget.path_to_icons =
-	"/home/codejunkienick/.config/awesome/awesompd/icons"
+	"/home/nick/.config/awesome/awesompd/icons"
 -- Set the default music format for Jamendo streams. You can change
 -- this option on the fly in awesompd itself.
 -- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
@@ -525,7 +525,7 @@ musicwidget.show_album_cover = true
 musicwidget.album_cover_size = 50
 -- This option is necessary if you want the album covers to be shown
 -- for your local tracks.
-musicwidget.mpd_config = "/home/codejunkienick/.config/mpd/mpd.conf"
+musicwidget.mpd_config = "/home/nick/.config/mpd/mpd.conf"
 -- Specify the browser you use so awesompd can open links from
 -- Jamendo in it.
 musicwidget.browser = "chromium"

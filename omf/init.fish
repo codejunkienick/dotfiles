@@ -27,7 +27,14 @@ set -x PATH $PATH ~/bin
 set -x PATH $PATH ~/.cargo/bin
 set -x PS1 '\[\033[0;35m\]\u@ \[\033[0;33m\]\W\[\033[00m\] $ '
 set -x DISPLAY :0
+set -x WINEPREFIX /home/nick/Data/wine
 set -x  PIP_CONFIG_FILE /dev/null pip install --isolated --root="$pkgdir" --ignore-installed --no-deps *.whl
+
+set -x ANDROID_HOME /opt/android-sdk
+set -x PATH $PATH $ANDROID_HOME/emulator
+set -x PATH $PATH $ANDROID_HOME/tools
+set -x PATH $PATH $ANDROID_HOME/tools/bin
+set -x PATH $PATH $ANDROID_HOME/platform-tools
 
 #Radios
 alias radio.kexp="mpv --playlist ~/Radio/kexp.pls"
@@ -36,6 +43,6 @@ alias radio.kuvo="mpv  http://kuvo-ice.streamguys.org/kuvo-aac-64"
 alias radio.wfmu="mpv  --playlist ~/Radio/wfmu.pls"
 alias radio.resonance="mpv --playlist http://radio.canstream.co.uk:8004/live.mp3.m3u"
 
-alias quik="env LC_ALL="ru_RU.UTF-8" WINEPREFIX="/home/codejunkienick/.wine" wine C:\\\\Open_Broker_QUIK\\\\info.exe"
+alias quik="env LC_ALL="ru_RU.UTF-8" WINEPREFIX="/home/nick/.wine" wine C:\\\\Open_Broker_QUIK\\\\info.exe"
 
 
