@@ -147,6 +147,8 @@ let g:loaded_zipPlugin = 1
 vnoremap <C-c> "*y
 nnoremap <C-S-v> <C-v>
 nnoremap <C-v> "*p
+set clipboard+=unnamedplus
+
 
 " ----------------------------------------------------------------------------
 " Leader right way

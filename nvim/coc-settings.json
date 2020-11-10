@@ -17,6 +17,6 @@
     "javascriptreact"
   ],
   "eslint.autoFix": false,
-  "eslint.autoFixOnSave": false,
+  "eslint.autoFixOnSave": true,
   "prettier.eslintIntegration": true
 }
