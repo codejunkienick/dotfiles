@@ -18,5 +18,13 @@
   ],
   "eslint.autoFix": false,
   "eslint.autoFixOnSave": true,
-  "prettier.eslintIntegration": true
+  "prettier.eslintIntegration": true,
+  "javascript.validate.enable": false,
+  "explorer.icon.enableNerdfont": true,
+  "git.addGBlameToBufferVar": true,
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete"
 }

@@ -17,21 +17,19 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jparise/vim-graphql'
 Plug 'tbastos/vim-lua'
 Plug 'pangloss/vim-javascript'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'hail2u/vim-css3-syntax'
+Plug 'liuchengxu/vista.vim'
 
 " Powerline plugin
 Plug 'itchyny/lightline.vim'
 
-" automatic closing of quotes, parenthesis, brackets, etc.
-Plug 'Raimondi/delimitMate'
-
 " Navigation
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdtree'
-Plug 'romgrk/vim-easytags' 
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'ericfreese/typescript-vim'
 
 " Text utils
 Plug 'easymotion/vim-easymotion'
@@ -43,16 +41,18 @@ Plug 'tpope/vim-abolish'     " Better search/replace case sensitive preserve
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'moll/vim-bbye'
+Plug 'junegunn/gv.vim'
 
 
 " Themes
-Plug 'trevordmiller/nova-vim'
+Plug 'ryanoasis/vim-devicons'
 Plug 'icymind/NeoSolarized'
 
 " Writing Focus
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim'
 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Plug 'tpope/vim-git'
 " Plug 'Shougo/vimproc.vim', {'do' : 'make'}
@@ -65,15 +65,8 @@ if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
-" autocmd BufWritePre *.js CocCommand prettier.formatFile
-" autocmd BufWritePre *.tsx CocCommand prettier.formatFile
-" autocmd BufWritePre *.ts CocCommand prettier.formatFile
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-" augroup SyntaxSettings
-"     autocmd!
-"     autocmd BufNewFile,BufRead *.tsx set filetype=typescript
-" augroup END
 
 call plug#end()
 
@@ -101,8 +94,8 @@ set hlsearch
 set gdefault
 set incsearch
 set winwidth=84 
-set nobackup 
-set nowritebackup
+" set nobackup 
+" set nowritebackup
 " Better display for messages
 set cmdheight=2
 set updatetime=300
@@ -147,6 +140,7 @@ let g:loaded_zipPlugin = 1
 vnoremap <C-c> "*y
 nnoremap <C-S-v> <C-v>
 nnoremap <C-v> "*p
+
 set clipboard+=unnamedplus
 
 
@@ -174,7 +168,7 @@ nnoremap <C-L> <C-W><C-L>
 set splitbelow
 set splitright
 
-:nnoremap <F8> :vertical wincmd f<CR>
+nnoremap <F8> :Vista!!<CR>
 
 " ----------------------------------------------------------------------------
 " Buffer management
@@ -206,9 +200,6 @@ nnoremap <A-F8> 8gt
 nnoremap <A-F9> 9gt
 nnoremap <A-F0> 10gt
 
-nnoremap <F8> :TagbarToggle<CR>
-nnoremap <F12> :NERDTreeToggle<CR>
-nnoremap <F10> :NERDTreeFind<CR>
 
 " ----------------------------------------------------------------------------
 " Make the 81st column stand out
@@ -275,14 +266,14 @@ autocmd! User GoyoLeave Limelight!
 set cursorline 
 set encoding=utf-8
 set fileencoding=utf-8
-set guifont=Operator\ Mono\ 13
+set guifont=Iosevka\ Nerd\ Font\ Mono\ 13
 set guioptions-=Be 
 set guioptions=aAc 
 "set list
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:• 
-set directory^=$HOME/.config/nvim/tmp//
-set backupdir=$HOME/.config/nvim/backup// 
-set undodir=$HOME/.config/nvim/undo//
+set directory^=$HOME/.cache/nvim/tmp/
+set backupdir=$HOME/.cache/nvim/backup/ 
+set undodir=$HOME/.cache/nvim/undo/
 set showmatch
 set smartcase
 "set term=xterm-256color
@@ -309,6 +300,7 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit' }
 let g:fzf_layout = { 'down': '~20%' }
 
+" may be useless without vim-ripgrep
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
   \ -g "*.{js,php,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
@@ -481,7 +473,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document
@@ -505,7 +497,6 @@ function! s:select_current_word()
   return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
 endfunc
 
-let g:nova_transparent = 1
 
 colorscheme NeoSolarized
 hi Normal guibg=NONE ctermbg=NONE 
@@ -521,27 +512,131 @@ function! LightlineGitBlame() abort
 endfunction
 
 
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
 
 " lightline
+set showtabline=2
 let g:lightline = {
    \ 'colorscheme': 'solarized',
+   \ 'enable': {'statusline': 1, 'tabline' :1 },
   \ 'active': {
   \   'left': [
   \     [ 'mode', 'paste' ],
   \     [ 'gitbranch' ],
-  \     [ 'diagnostic', 'readonly', 'cocstatus', 'filename', 'modified' ]
+  \     [ 'diagnostic', 'readonly', 'cocstatus', 'filename', 'modified', 'method' ]
   \   ],
   \   'right':[
   \     [ 'filetype', 'lineinfo', 'percent' ],
-  \     [ 'blame' ]
+  \     ['blame']
   \   ],
   \ },
+  \ 'tab': {
+  \   'active': [ 'tabnum', 'filename', 'modified' ],
+  \   'inactive': [ 'tabnum', 'filename', 'modified' ] 
+  \ },
+  \ 'tabline': {
+  \   'left': [  [ 'tabs' ] ],
+  \   'right': [ [ 'close' ] ]
+  \ },
   \ 'component_function': {
+  \   'method': 'NearestMethodOrFunction',
+  \   'filename': 'LightlineFilename',
   \   'gitbranch': 'fugitive#head',
   \   'blame': 'LightlineGitBlame',
   \   'cocstatus': 'coc#status',
   \   'currentfunction': 'CocCurrentFunction'
-  \ }
+  \ },
+  \ 'tab_component_function': {
+  \   'filename': 'MyTabFilename',
+  \ },
+  \ 'mode_map': {
+  \ 'n' : 'N',
+  \ 'i' : 'I',
+  \ 'R' : 'R',
+  \ 'v' : 'V',
+  \ 'V' : 'VL',
+  \ "\<C-v>": 'VB',
+  \ 'c' : 'C',
+  \ 's' : 'S',
+  \ 'S' : 'SL',
+  \ "\<C-s>": 'SB',
+  \ 't': 'T',
+  \ },
 \ }
+
+function! MyTabFilename(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let bufnum = buflist[winnr - 1]
+  let bufname = expand('#'.bufnum.':t')
+  let buffullname = expand('#'.bufnum.':p')
+  let buffullnames = []
+  let bufnames = []
+  for i in range(1, tabpagenr('$'))
+    if i != a:n
+      let num = tabpagebuflist(i)[tabpagewinnr(i) - 1]
+      call add(buffullnames, expand('#' . num . ':p'))
+      call add(bufnames, expand('#' . num . ':t'))
+    endif
+  endfor
+  let i = index(bufnames, bufname)
+  if strlen(bufname) && i >= 0 && buffullnames[i] != buffullname
+    return substitute(buffullname, '.*/\([^/]\+/\)', '\1', '')
+  else
+    return strlen(bufname) ? bufname : '[No Name]'
+  endif
+endfunction
+
+function! LightlineFilename()
+  let root = fnamemodify(get(b:, 'git_dir'), ':h')
+  let path = expand('%:p')
+  if path[:len(root)-1] ==# root
+    return path[len(root)+1:]
+  endif
+  return expand('%')
+endfunction
 set noshowmode
 
+
+let g:coc_explorer_global_presets = {
+\   'neovim': {
+\     'root-uri': '~/.config/neovim',
+\   },
+\   'tab': {
+\     'position': 'tab',
+\     'quit-on-open': v:true,
+\   },
+\   'floating': {
+\     'position': 'floating',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingTop': {
+\     'position': 'floating',
+\     'floating-position': 'center-top',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingLeftside': {
+\     'position': 'floating',
+\     'floating-position': 'left-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingRightside': {
+\     'position': 'floating',
+\     'floating-position': 'right-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'simplify': {
+\     'file-child-template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
+\   }
+\ }
+
+" Use preset argument to open it
+nnoremap <space>e :<C-u>CocCommand explorer<CR>
+
+" List all presets
+nnoremap <space>el :<C-u>CocList explPresets<CR>
