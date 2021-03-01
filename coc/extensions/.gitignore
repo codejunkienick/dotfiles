@@ -1,0 +1,5 @@
+node_modules/
+coc-yank-data/
+coc-go-data/
+coc-phpls-data/
+coc-tabnine-data/

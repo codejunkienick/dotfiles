@@ -1,0 +1,10 @@
+explorer
+jest.singleTest
+eslint.executeAutofix
+eslint.showOutputChannel
+prettier.formatFile
+tabnine.openConfig
+jest.projectTest
+jest.init
+go.playground
+workspace.clearWatchman

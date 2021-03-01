@@ -1,0 +1,66 @@
+{
+  "marketplace": {
+    "%2Fhome%2Fcodejunkienick%2FDotfiles%2Fnvim": [
+      "sy",
+      "snip",
+      "omni",
+      "qkj",
+      "pret"
+    ],
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fserverless-graphql": [
+      "ts"
+    ],
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Flearn%2Fts-graphql": [
+      "webpack"
+    ],
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fcoffeerate": [
+      "json"
+    ],
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fcoffeerate%2FCoffeerateApp": [
+      "tsq"
+    ]
+  },
+  "gstatus": {
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fimdworkspace": [
+      "Bl"
+    ]
+  },
+  "lists": {
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fcoffeerate": [
+      "ext"
+    ]
+  },
+  "extensions": {
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fcoffeerate": [
+      "js"
+    ],
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fimdworkspace": [
+      "flowq"
+    ]
+  },
+  "commands": {
+    "%2Fhome%2Fcodejunkienick%2FDotfiles%2Fnvim": [
+      "qjk"
+    ],
+    "%2Fhome%2Fnick%2FWork%2Fappworkspace": [
+      "1"
+    ]
+  },
+  "diagnostics": {
+    "%2Fhome%2Fcodejunkienick%2Fjobs%2Fimdworkspace": [
+      " = ",
+      "index.dts",
+      " index",
+      "on"
+    ],
+    "%2Fhome%2Fnick%2FWork%2Fappworkspace": [
+      " t",
+      " d",
+      " s",
+      " "
+    ],
+    "%2Fhome%2Fnick%2FWork%2Fappworkspace%2Fpackages%2Fimdslackbot": [
+      " "
+    ]
+  }
+}

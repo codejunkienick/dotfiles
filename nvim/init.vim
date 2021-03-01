@@ -11,13 +11,13 @@ Plug 'tpope/vim-sensible'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Syntax Plugins
-Plug 'ericfreese/typescript-vim'
+Plug 'leafgarland/typescript-vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jparise/vim-graphql'
 Plug 'tbastos/vim-lua'
 Plug 'pangloss/vim-javascript'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+" Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
 Plug 'hail2u/vim-css3-syntax'
 Plug 'liuchengxu/vista.vim'
 
@@ -25,11 +25,9 @@ Plug 'liuchengxu/vista.vim'
 Plug 'itchyny/lightline.vim'
 
 " Navigation
-Plug 'mileszs/ack.vim'
+Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'ericfreese/typescript-vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 
 " Text utils
 Plug 'easymotion/vim-easymotion'
@@ -74,7 +72,8 @@ call plug#end()
 " ----------------------------------------------------------------------------
 " General
 " ----------------------------------------------------------------------------
-set exrc
+" set exrc
+let g:loaded_python_provider = 0 " disable python2
 set secure
 set shell=fish
 set t_Co=256
@@ -94,14 +93,11 @@ set hlsearch
 set gdefault
 set incsearch
 set winwidth=84 
-" set nobackup 
-" set nowritebackup
 " Better display for messages
-set cmdheight=2
-set updatetime=300
+set cmdheight=1
+set updatetime=100
 set shortmess+=c
 set signcolumn=yes
-" set noswapfile 
 set winheight=10
 set mouse=a
 set nofoldenable    " disable folding
@@ -278,7 +274,7 @@ set showmatch
 set smartcase
 "set term=xterm-256color
 let g:local_vimrc = {'names':['.vimrc'],'hash_fun':'LVRHashOfFile'}
-let g:vim_g_open_command = "google-chrome-beta"
+let g:vim_g_open_command = "chromium"
 
 let g:easytags_async=1
 let g:easytags_auto_highlight=0
@@ -291,29 +287,34 @@ command! -nargs=0 Sw w !sudo tee % > /dev/null
 " FuzzySearch
 " ----------------------------------------------------------------------------
 
-" fzf config
-nmap <C-p> :Files<cr> imap <c-x><c-l> <plug>(fzf-complete-line)
-
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout = { 'down': '~20%' }
+let g:fzf_layout = { 'down': '~35%' }
+let g:fzf_history_dir = '~/.cache/nvim/fzf-history'
 
-" may be useless without vim-ripgrep
-let g:rg_command = '
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
-  \ -g "*.{js,php,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
-  \ -g "!{.git,node_modules,vendor}/*" '
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
 
-command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" fzf config
+nnoremap <C-p> :GFiles<cr>
+nnoremap <C-f> :RG<cr>
+" Paste from register into FZF instance
+tnoremap <expr> <C-v> '<C-\><C-N>pi'
 
 set rtp+=/usr/bin/fzf "Fuzzy search
 
 " ----------------------------------------------------------------------------
 " Stuff
 " ----------------------------------------------------------------------------
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 let g:jsx_ext_required = 0
 let g:vim_jsx_pretty_highlight_close_tag = 1
 " let g:javascript_plugin_flow = 1
@@ -343,17 +344,7 @@ hi IndentGuidesEven ctermbg=darkgrey
 
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
-" let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' } 
 
-" Plugin key-mappings. Note: It must be "imap" and "smap".  It uses <Plug>
-" mappings.
-" imap <C-k><Plug>(neosnippet_expand_or_jump) 
-" smap <C-k><Plug>(neosnippet_expand_or_jump) 
-" xmap <C-k> <Plug>(neosnippet_expand_target)
-"
-
-" Enable snipMate compatibility feature.
-" let g:neosnippet#enable_snipmate_compatibility = 1
 set hidden
 
 
@@ -372,18 +363,6 @@ imap <expr><C-d> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
 imap <expr><C-u> pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -391,9 +370,40 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" " Use <C-l> for trigger snippet expand.
+" imap <C-l> <Plug>(coc-snippets-expand)
+"
+" " Use <C-j> for select text for visual placeholder of snippet.
+" vmap <C-j> <Plug>(coc-snippets-select)
+"
+" " Use <C-j> for jump to next placeholder, it's default of coc.nvim
+" let g:coc_snippet_next = '<c-j>'
+"
+" " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+" let g:coc_snippet_prev = '<c-k>'
+"
+" " Use <C-j> for both expand and jump (make expand higher priority.)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -426,13 +436,13 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json,javascript setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json,javascript setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -640,3 +650,16 @@ nnoremap <space>e :<C-u>CocCommand explorer<CR>
 
 " List all presets
 nnoremap <space>el :<C-u>CocList explPresets<CR>
+
+
+" Run jest for current project
+command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
+
+" Run jest for current file
+command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
+
+" Run jest for current test
+nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
+
+" Init jest in current cwd, require global jest command exists
+command! JestInit :call CocAction('runCommand', 'jest.init')

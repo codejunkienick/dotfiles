@@ -18,7 +18,12 @@
   ],
   "eslint.autoFix": false,
   "eslint.autoFixOnSave": true,
-  "prettier.eslintIntegration": true,
+  "eslint.options": {
+    "cache": true
+  },
+  "typescript.format.enabled": false,
+  "javascript.format.enabled": false,
+  "tabnine.priority": 89,
   "javascript.validate.enable": false,
   "explorer.icon.enableNerdfont": true,
   "git.addGBlameToBufferVar": true,
