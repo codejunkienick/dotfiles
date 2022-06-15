@@ -13,19 +13,11 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'fannheyward/telescope-coc.nvim'
 
+
 " Super Power
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Syntax Plugins
-" Plug 'leafgarland/typescript-vim'
-" Plug 'plasticboy/vim-markdown'
-" Plug 'maxmellon/vim-jsx-pretty'
-" Plug 'jparise/vim-graphql'
-" Plug 'tbastos/vim-lua'
-" Plug 'pangloss/vim-javascript'
-" Plug 'styled-components/vim-styled-components'
-" Plug 'hail2u/vim-css3-syntax'
-" Plug 'liuchengxu/vista.vim'
+" Highlight
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Powerline plugin
@@ -35,45 +27,35 @@ Plug 'itchyny/lightline.vim'
 Plug 'jremmen/vim-ripgrep'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Plug 'ctrlpvim/ctrlp.vim'
+
+Plug 'moll/vim-bbye' " Bdelete func for ,q
 
 " Text utils
-" Plug 'easymotion/vim-easymotion'
 Plug 'phaazon/hop.nvim'
 Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'     " Better search/replace case sensitive preserve
 
 " Git
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'sindrets/diffview.nvim'
 Plug 'tpope/vim-fugitive'
-Plug 'moll/vim-bbye'
-Plug 'junegunn/gv.vim'
 
 
 " Themes
+Plug 'glepnir/dashboard-nvim'
+Plug 'folke/which-key.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'icymind/NeoSolarized'
-Plug 'sainnhe/everforest'
+" Plug 'icymind/NeoSolarized'
+" Plug 'sainnhe/everforest'
 Plug 'navarasu/onedark.nvim'
-Plug 'olimorris/onedarkpro.nvim'
-Plug 'sainnhe/edge'
-Plug 'rose-pine/neovim'
+" Plug 'olimorris/onedarkpro.nvim'
+" Plug 'sainnhe/edge'
+" Plug 'rose-pine/neovim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
 
 " Writing Focus
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
-
-" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
-" Plug 'tpope/vim-git'
-" Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-" Plug 'Shougo/neosnippet'
-" Plug 'Shougo/neosnippet-snippets'
-" Plug 'xolox/vim-misc'
-" Plug 'xolox/vim-session'
 
 
 call plug#end()
@@ -114,6 +96,7 @@ set winwidth=84
 " Better display for messages
 set cmdheight=1
 set updatetime=100
+set timeoutlen=500
 set shortmess+=c
 set signcolumn=yes
 set winheight=10
@@ -307,8 +290,8 @@ command! -nargs=0 Sw w !sudo tee % > /dev/null
 " ----------------------------------------------------------------------------
 " Telescope
 " ----------------------------------------------------------------------------
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <space>p <cmd>Telescope find_files<cr>
+nnoremap <space>f <cmd>Telescope live_grep<cr>
 
 " ----------------------------------------------------------------------------
 " FuzzySearch
@@ -332,8 +315,8 @@ endfunction
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 " fzf config
-nnoremap <C-p> :GFiles<cr>
-nnoremap <C-f> :RG<cr>
+" nnoremap <C-p> :GFiles<cr>
+" nnoremap <C-f> :RG<cr>
 " Paste from register into FZF instance
 tnoremap <expr> <C-v> '<C-\><C-N>pi'
 
@@ -511,7 +494,7 @@ nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
 " nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>c  :<C-u>Telescope coc commands<cr>
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
@@ -520,8 +503,6 @@ nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
@@ -696,6 +677,7 @@ command! JestInit :call CocAction('runCommand', 'jest.init')
 
 
 lua <<EOF
+require('gitsigns').setup()
 require('telescope').load_extension('coc')
 require'hop'.setup()
 require'nvim-treesitter.configs'.setup {
@@ -703,4 +685,34 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
+require("which-key").setup()
+
+local home = os.getenv('HOME')
+local db = require('dashboard')
+db.custom_center = {
+  {icon = '?  ',
+    desc = 'Recently laset session                  ',
+    shortcut = 'SPC s l',
+    action ='SessionLoad'},
+    {icon = '?  ',
+      desc = 'Recently opened files                   ',
+      action =  'DashboardFindHistory',
+      shortcut = 'SPC f h'},
+      {icon = '?  ',
+        desc = 'Find  File                              ',
+        action = 'Telescope find_files find_command=rg,--hidden,--files',
+        shortcut = 'SPC f f'},
+        {icon = '?  ',
+          desc ='File Browser                            ',
+          action =  'Telescope file_browser',
+          shortcut = 'SPC f b'},
+          {icon = '?  ',
+            desc = 'Find  word                              ',
+            aciton = 'DashboardFindWord',
+            shortcut = 'SPC f w'},
+            {icon = '?  ',
+              desc = 'Open Personal dotfiles                  ',
+              action = 'Telescope dotfiles path=' .. home ..'/.dotfiles',
+              shortcut = 'SPC f d'},
+              }
 EOF
