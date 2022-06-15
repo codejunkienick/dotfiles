@@ -7,19 +7,26 @@ call plug#begin('~/.config/nvim/plugged')
 " Default VIM settings
 Plug 'tpope/vim-sensible'
 
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'fannheyward/telescope-coc.nvim'
+
 " Super Power
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Syntax Plugins
-Plug 'leafgarland/typescript-vim'
-Plug 'plasticboy/vim-markdown'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'jparise/vim-graphql'
-Plug 'tbastos/vim-lua'
-Plug 'pangloss/vim-javascript'
-Plug 'styled-components/vim-styled-components'
-Plug 'hail2u/vim-css3-syntax'
-Plug 'liuchengxu/vista.vim'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'plasticboy/vim-markdown'
+" Plug 'maxmellon/vim-jsx-pretty'
+" Plug 'jparise/vim-graphql'
+" Plug 'tbastos/vim-lua'
+" Plug 'pangloss/vim-javascript'
+" Plug 'styled-components/vim-styled-components'
+" Plug 'hail2u/vim-css3-syntax'
+" Plug 'liuchengxu/vista.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Powerline plugin
 Plug 'itchyny/lightline.vim'
@@ -31,7 +38,8 @@ Plug 'junegunn/fzf.vim'
 " Plug 'ctrlpvim/ctrlp.vim'
 
 " Text utils
-Plug 'easymotion/vim-easymotion'
+" Plug 'easymotion/vim-easymotion'
+Plug 'phaazon/hop.nvim'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'     " Better search/replace case sensitive preserve
@@ -44,8 +52,15 @@ Plug 'junegunn/gv.vim'
 
 
 " Themes
-Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'icymind/NeoSolarized'
+Plug 'sainnhe/everforest'
+Plug 'navarasu/onedark.nvim'
+Plug 'olimorris/onedarkpro.nvim'
+Plug 'sainnhe/edge'
+Plug 'rose-pine/neovim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+
 
 " Writing Focus
 Plug 'junegunn/limelight.vim'
@@ -60,15 +75,17 @@ Plug 'junegunn/goyo.vim'
 " Plug 'xolox/vim-misc'
 " Plug 'xolox/vim-session'
 
+
+call plug#end()
+
+let g:tokyonight_style = "storm"
+let g:tokyonight_italic_functions = 1
+
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
-
-
-call plug#end()
-
 
 " ----------------------------------------------------------------------------
 " General
@@ -130,6 +147,7 @@ let g:loaded_vimball = 1
 let g:loaded_vimballPlugin = 1
 let g:loaded_zip = 1
 let g:loaded_zipPlugin = 1
+"
 " }}}
 " ----------------------------------------------------------------------------
 " Clipboard
@@ -234,16 +252,18 @@ set nowrap
 set nojoinspaces                      " J command doesn't add extra space 
 
 " ----------------------------------------------------------------------------
-" Easymotion
+" Hop
 " ----------------------------------------------------------------------------
-nmap s <Plug>(easymotion-s2)
 "
-" " Turn on case sensitive feature
-let g:EasyMotion_smartcase = 1
-
-" " JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+nnoremap <Space>w <cmd>HopWord<cr>
+nnoremap <Space>l <cmd>HopLine<cr>
+" "
+" " " Turn on case sensitive feature
+" let g:EasyMotion_smartcase = 1
+"
+" " " JK motions: Line motions
+" map <Leader>j <Plug>(easymotion-j)
+" map <Leader>k <Plug>(easymotion-k)
 
 " ----------------------------------------------------------------------------
 " Status line
@@ -283,6 +303,12 @@ let g:easytags_auto_highlight=0
 " Allow saving in root
 command! -nargs=0 Sw w !sudo tee % > /dev/null
 
+
+" ----------------------------------------------------------------------------
+" Telescope
+" ----------------------------------------------------------------------------
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 
 " ----------------------------------------------------------------------------
 " FuzzySearch
@@ -343,7 +369,6 @@ hi IndentGuidesOdd  ctermbg=black
 hi IndentGuidesEven ctermbg=darkgrey
 
 
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 
 set hidden
@@ -509,7 +534,6 @@ function! s:select_current_word()
 endfunc
 
 
-colorscheme NeoSolarized
 hi Normal guibg=NONE ctermbg=NONE 
 
 function! CocCurrentFunction()
@@ -527,11 +551,16 @@ function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
+let g:onedark_config = {
+    \ 'style': 'cool',
+\}
+
+colorscheme onedark
 
 " lightline
 set showtabline=2
 let g:lightline = {
-   \ 'colorscheme': 'solarized',
+   \ 'colorscheme': 'tokyonight',
    \ 'enable': {'statusline': 1, 'tabline' :1 },
   \ 'active': {
   \   'left': [
@@ -664,3 +693,14 @@ nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
 
 " Init jest in current cwd, require global jest command exists
 command! JestInit :call CocAction('runCommand', 'jest.init')
+
+
+lua <<EOF
+require('telescope').load_extension('coc')
+require'hop'.setup()
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+  },
+}
+EOF
