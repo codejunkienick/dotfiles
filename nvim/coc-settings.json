@@ -9,14 +9,13 @@
     "markdown",
     "md"
   ],
-  "eslint.filetypes": [
+  "eslint.probe": [
     "javascript",
     "json",
     "typescript",
     "typescriptreact",
     "javascriptreact"
   ],
-  "eslint.autoFix": false,
   "eslint.autoFixOnSave": true,
   "eslint.options": {
     "cache": true

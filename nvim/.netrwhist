@@ -1,4 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/home/nick'
-let g:netrw_dirhist_2='/home'
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/Users/nick/Work/libs/visx'
+let g:netrw_dirhist_7='/Users/nick/Work/libs/visx/packages/visx-visx/src'
+let g:netrw_dirhist_6='/Users/nick/Work/libs/visx/packages/visx-visx'
+let g:netrw_dirhist_5='/Users/nick/Work/libs/visx/packages'
+let g:netrw_dirhist_4='/Users/nick/Work/libs/visx/scripts'
+let g:netrw_dirhist_3='/Users/nick/Work/libs/visx'
+let g:netrw_dirhist_2='/Users/nick/Work/appworkspace'
+let g:netrw_dirhist_1='/Users/nick'
+let g:netrw_dirhist_0='/Users/nick/Work/appworkspace'
+let g:netrw_dirhist_9='/Users/nick/Work/appworkspace/packages'

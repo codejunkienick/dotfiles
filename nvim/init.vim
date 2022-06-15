@@ -17,7 +17,7 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jparise/vim-graphql'
 Plug 'tbastos/vim-lua'
 Plug 'pangloss/vim-javascript'
-" Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
+Plug 'styled-components/vim-styled-components'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'liuchengxu/vista.vim'
 
@@ -26,6 +26,7 @@ Plug 'itchyny/lightline.vim'
 
 " Navigation
 Plug 'jremmen/vim-ripgrep'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " Plug 'ctrlpvim/ctrlp.vim'
 
@@ -50,7 +51,7 @@ Plug 'icymind/NeoSolarized'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/goyo.vim'
 
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Plug 'tpope/vim-git'
 " Plug 'Shougo/vimproc.vim', {'do' : 'make'}
@@ -114,10 +115,10 @@ let g:loaded_logiPat = 1
 let g:loaded_man = 1
 let g:loaded_matchit = 1
 let g:loaded_matchparen = 1
-let g:loaded_netrw = 1
-let g:loaded_netrwPlugin = 1
-let g:loaded_netrwFileHandlers = 1
-let g:loaded_netrwSettings = 1
+" let g:loaded_netrw = 1
+" let g:loaded_netrwPlugin = 1
+" let g:loaded_netrwFileHandlers = 1
+" let g:loaded_netrwSettings = 1
 let g:loaded_rrhelper = 1
 let g:loaded_shada_plugin = 1
 let g:loaded_spellfile_plugin  = 1
@@ -310,7 +311,7 @@ nnoremap <C-f> :RG<cr>
 " Paste from register into FZF instance
 tnoremap <expr> <C-v> '<C-\><C-N>pi'
 
-set rtp+=/usr/bin/fzf "Fuzzy search
+set rtp+=/opt/homebrew/bin/fzf "Fuzzy search
 
 " ----------------------------------------------------------------------------
 " Stuff
@@ -554,7 +555,7 @@ let g:lightline = {
   \ 'component_function': {
   \   'method': 'NearestMethodOrFunction',
   \   'filename': 'LightlineFilename',
-  \   'gitbranch': 'fugitive#head',
+  \   'gitbranch': 'FugitiveHead',
   \   'blame': 'LightlineGitBlame',
   \   'cocstatus': 'coc#status',
   \   'currentfunction': 'CocCurrentFunction'
