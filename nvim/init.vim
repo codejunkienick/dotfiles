@@ -10,9 +10,8 @@ Plug 'tpope/vim-sensible'
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'fannheyward/telescope-coc.nvim'
-
 
 " Super Power
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -50,6 +49,14 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'navarasu/onedark.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
+function! UpdateRemotePlugins(...)
+  " Needed to refresh runtime files
+  let &rtp=&rtp
+  UpdateRemotePlugins
+endfunction
+
+Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+
 call plug#end()
 
 let g:tokyonight_style = "storm"
@@ -81,6 +88,7 @@ set incsearch
 set winwidth=84 
 " Better display for messages
 set cmdheight=1
+set showcmd
 set updatetime=100
 set timeoutlen=500
 set shortmess+=c
@@ -88,10 +96,6 @@ set signcolumn=yes
 set winheight=10
 set mouse=a
 set nofoldenable    " disable folding
-" Disable menu.vim
-if has('gui_running') 
-	set guioptions=Mc 
-endif
 
 " Disable pre-bundled plugins
 let g:loaded_getscript = 1
@@ -102,6 +106,7 @@ let g:loaded_man = 1
 let g:loaded_matchit = 1
 let g:loaded_matchparen = 1
 let g:loaded_rrhelper = 1
+let g:loaded_netrwPlugin = 1
 let g:loaded_shada_plugin = 1
 let g:loaded_spellfile_plugin  = 1
 let g:loaded_tar = 1
@@ -129,15 +134,15 @@ set clipboard+=unnamedplus
 " ----------------------------------------------------------------------------
 let mapleader=","
 
-nnoremap : ,
-xnoremap : ,
-onoremap : ,
-
-nnoremap , :
-xnoremap , :
-onoremap , :
-map q: <Nop>
-nnoremap Q <nop>
+" jk and kj -> Quit Insert mode (and autosave)
+inoremap jk <Esc><Esc>`^:w<Cr>
+inoremap kj <Esc><Esc>`^:w<Cr>
+cnoremap jk <C-c>
+cnoremap kj <C-c>
+nnoremap <Leader>w :wa<Cr>
+nnoremap <Leader>sv :source $HOME/dotfiles/nvim/init.vim<Cr>
+" Autosave on CursorHold
+" autocmd TextChanged,FocusLost,BufEnter * silent update
 
 " ----------------------------------------------------------------------------
 " Splits
@@ -167,16 +172,6 @@ nnoremap td  :tabclose<CR>
 nnoremap tm  :tabm<Space>
 nnoremap H gT
 nnoremap L gt
-nnoremap <A-F1> 1gt
-nnoremap <A-F2> 2gt
-nnoremap <A-F3> 3gt
-nnoremap <A-F4> 4gt
-nnoremap <A-F5> 5gt
-nnoremap <A-F6> 6gt
-nnoremap <A-F7> 7gt
-nnoremap <A-F8> 8gt
-nnoremap <A-F9> 9gt
-nnoremap <A-F0> 10gt
 
 
 " ----------------------------------------------------------------------------
@@ -229,9 +224,6 @@ nnoremap <Space>l <cmd>HopLine<cr>
 set cursorline 
 set encoding=utf-8
 set fileencoding=utf-8
-set guifont=Iosevka\ Nerd\ Font\ Mono\ 13
-set guioptions-=Be 
-set guioptions=aAc 
 "set list
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:• 
 set directory^=$HOME/.cache/nvim/tmp/
@@ -594,44 +586,6 @@ let g:coc_explorer_global_presets = {
 
 
 lua <<EOF
-require('Comment').setup()
-require("nvim-autopairs").setup {}
-require('gitsigns').setup()
-require('telescope').load_extension('coc')
-require'hop'.setup()
-require'nvim-treesitter.configs'.setup {
-  highlight = {
-    enable = true,
-  },
-}
-require("which-key").setup()
-
-local home = os.getenv('HOME')
-local db = require('dashboard')
-db.custom_center = {
-  {icon = '?  ',
-    desc = 'Recently laset session                  ',
-    shortcut = 'SPC s l',
-    action ='SessionLoad'},
-    {icon = '?  ',
-      desc = 'Recently opened files                   ',
-      action =  'DashboardFindHistory',
-      shortcut = 'SPC f h'},
-      {icon = '?  ',
-        desc = 'Find  File                              ',
-        action = 'Telescope find_files find_command=rg,--hidden,--files',
-        shortcut = 'SPC f f'},
-        {icon = '?  ',
-          desc ='File Browser                            ',
-          action =  'Telescope file_browser',
-          shortcut = 'SPC f b'},
-          {icon = '?  ',
-            desc = 'Find  word                              ',
-            aciton = 'DashboardFindWord',
-            shortcut = 'SPC f w'},
-            {icon = '?  ',
-              desc = 'Open Personal dotfiles                  ',
-              action = 'Telescope dotfiles path=' .. home ..'/.dotfiles',
-              shortcut = 'SPC f d'},
-              }
+require "keybindings"
+require "plugins"
 EOF
