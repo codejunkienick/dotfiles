@@ -32,8 +32,9 @@ Plug 'moll/vim-bbye' " Bdelete func for ,q
 
 " Text utils
 Plug 'phaazon/hop.nvim'
-Plug 'tomtom/tcomment_vim'
-" Plug 'tpope/vim-surround'
+Plug 'numToStr/Comment.nvim'
+" Plug 'tomtom/tcomment_vim'
+Plug 'windwp/nvim-autopairs'
 Plug 'tpope/vim-abolish'     " Better search/replace case sensitive preserve
 
 " Git
@@ -46,28 +47,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'glepnir/dashboard-nvim'
 Plug 'folke/which-key.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-" Plug 'icymind/NeoSolarized'
-" Plug 'sainnhe/everforest'
 Plug 'navarasu/onedark.nvim'
-" Plug 'olimorris/onedarkpro.nvim'
-" Plug 'sainnhe/edge'
-" Plug 'rose-pine/neovim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-
-
-" Writing Focus
-
 
 call plug#end()
 
 let g:tokyonight_style = "storm"
 let g:tokyonight_italic_functions = 1
-
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " ----------------------------------------------------------------------------
 " General
@@ -115,10 +101,6 @@ let g:loaded_logiPat = 1
 let g:loaded_man = 1
 let g:loaded_matchit = 1
 let g:loaded_matchparen = 1
-" let g:loaded_netrw = 1
-" let g:loaded_netrwPlugin = 1
-" let g:loaded_netrwFileHandlers = 1
-" let g:loaded_netrwSettings = 1
 let g:loaded_rrhelper = 1
 let g:loaded_shada_plugin = 1
 let g:loaded_spellfile_plugin  = 1
@@ -165,8 +147,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 set splitbelow
 set splitright
-
-nnoremap <F8> :Vista!!<CR>
 
 " ----------------------------------------------------------------------------
 " Buffer management
@@ -240,24 +220,7 @@ set nojoinspaces                      " J command doesn't add extra space
 "
 nnoremap <Space>w <cmd>HopWord<cr>
 nnoremap <Space>l <cmd>HopLine<cr>
-" "
-" " " Turn on case sensitive feature
-" let g:EasyMotion_smartcase = 1
-"
-" " " JK motions: Line motions
-" map <Leader>j <Plug>(easymotion-j)
-" map <Leader>k <Plug>(easymotion-k)
 
-" ----------------------------------------------------------------------------
-" Status line
-" ----------------------------------------------------------------------------
-" set statusline+=%#warningmsg#
-" set statusline+=%*
-" ----------------------------------------------------------------------------
-" Writing
-" ----------------------------------------------------------------------------
-autocmd! User GoyoEnter Limelight 
-autocmd! User GoyoLeave Limelight!
 
 
 " ----------------------------------------------------------------------------
@@ -280,9 +243,6 @@ set smartcase
 let g:local_vimrc = {'names':['.vimrc'],'hash_fun':'LVRHashOfFile'}
 let g:vim_g_open_command = "chromium"
 
-let g:easytags_async=1
-let g:easytags_auto_highlight=0
-
 " Allow saving in root
 command! -nargs=0 Sw w !sudo tee % > /dev/null
 
@@ -304,22 +264,20 @@ let g:fzf_action = {
 let g:fzf_layout = { 'down': '~35%' }
 let g:fzf_history_dir = '~/.cache/nvim/fzf-history'
 
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
+" function! RipgrepFzf(query, fullscreen)
+"   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+"   let initial_command = printf(command_fmt, shellescape(a:query))
+"   let reload_command = printf(command_fmt, '{q}')
+"   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+"   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+" endfunction
 " fzf config
 " nnoremap <C-p> :GFiles<cr>
+" command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 " nnoremap <C-f> :RG<cr>
 " Paste from register into FZF instance
-tnoremap <expr> <C-v> '<C-\><C-N>pi'
-
+" tnoremap <expr> <C-v> '<C-\><C-N>pi'
+"
 set rtp+=/opt/homebrew/bin/fzf "Fuzzy search
 
 " ----------------------------------------------------------------------------
@@ -344,18 +302,13 @@ endif
 
 " highlight Normal ctermfg=grey ctermbg=black
 " highlight nonText ctermbg=NONE
-
 let g:vitality_tmux_can_focus = 1
 
 " Color indent
 hi IndentGuidesOdd  ctermbg=black
 hi IndentGuidesEven ctermbg=darkgrey
 
-
-
-
 set hidden
-
 
 "Session settings
 let g:session_autosave = "yes"
@@ -445,14 +398,6 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-" augroup mygroup
-"   autocmd!
-"   " Setup formatexpr specified filetype(s).
-"   autocmd FileType typescript,json,javascript setl formatexpr=CocAction('formatSelected')
-"   " Update signature help on jump placeholder
-"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-" augroup end
-
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -476,35 +421,25 @@ nmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
 
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
 " Using CocList
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>Telescope coc commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-
 nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+" Use preset argument to open it
+nnoremap <space>e :<C-u>CocCommand explorer<CR>
+" Run jest for current project
+command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
+" Run jest for current file
+command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
+nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
+" Init jest in current cwd, require global jest command exists
+command! JestInit :call CocAction('runCommand', 'jest.init')
 
 nmap <expr> <silent> <C-c> <SID>select_current_word()
 function! s:select_current_word()
@@ -656,27 +591,11 @@ let g:coc_explorer_global_presets = {
 \   }
 \ }
 
-" Use preset argument to open it
-nnoremap <space>e :<C-u>CocCommand explorer<CR>
-
-" List all presets
-nnoremap <space>el :<C-u>CocList explPresets<CR>
-
-
-" Run jest for current project
-command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
-
-" Run jest for current file
-command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
-
-" Run jest for current test
-nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
-
-" Init jest in current cwd, require global jest command exists
-command! JestInit :call CocAction('runCommand', 'jest.init')
 
 
 lua <<EOF
+require('Comment').setup()
+require("nvim-autopairs").setup {}
 require('gitsigns').setup()
 require('telescope').load_extension('coc')
 require'hop'.setup()
